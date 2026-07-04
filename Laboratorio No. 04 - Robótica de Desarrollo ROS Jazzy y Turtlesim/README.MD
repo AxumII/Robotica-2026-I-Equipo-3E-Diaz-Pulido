@@ -259,9 +259,8 @@ Muestra visualmente la topología de la red de ROS, donde nuestro nodo lee las p
 
 ## Video Explicativo
 
-El análisis del código fuente, los criterios de diseño técnico seleccionados y la demostración en tiempo real de la simulación se pueden visualizar en el siguiente enlace:
+[Link](https://drive.google.com/drive/folders/1SVrb7ClZb8VMEGBJR8mviIBYOKBtLPtp?usp=drive_link)
 
-[Enlace al video de la sustentación (Vídeo Máx 10 minutos)]
 
 ---
 
