@@ -157,95 +157,75 @@ $$V_{angular} = \max(-2.5, \min(2.5, 3.0 \times \theta_{error}))$$
 
 ## Evidencias de Ejecución
 
-* **Movimiento Manual:** 
+* **Movimiento Manual:**
+<p align="center">
+  <img src="media/rqtscreenshot.png"width="700">
+</p>  
+
 * **Dibujo de Figuras Geométricas:** 
+<p align="center">
+  <img src="media/Letrasyfiguras.jpeg"width="700">
+</p> 
 * **Dibujo de Letras Personalizadas:** 
+<p align="center">
+  <img src="media/Letrasyfiguras.jpeg"width="700">
+</p> 
 * **Funcionamiento del Sistema Líder-Seguidor:** 
+<p align="center">
+  <img src="media/Persecucion Automatica.png"width="700">
+</p> 
 
 ### Salidas de Comandos de Inspección
 
 1. `ros2 node list**`
 
-* *Explicación de lo observado:* Muestra los nodos en ejecución. Se debe evidenciar la presencia de los nodos configurados.
 
-```bash
-/turtlesim
-/turtle_controller
-/turtle_follower
+<p align="center">
+  <img src="media/Ros2nodelist.png"width="700">
+</p> 
 
-```
+2. `ros2 topic list**`
 
-**2. `ros2 topic list**`
+<p align="center">
+  <img src="media/Ros2topiclist.png"width="700">
+</p> 
 
-* *Explicación de lo observado:* Permite verificar la correcta creación de los tópicos de control de velocidad y pose para ambas tortugas.
+3. `ros2 topic echo /turtle1/pose**`
 
-```bash
-/parameter_events
-/rosout
-/turtle1/cmd_vel
-/turtle1/color_sensor
-/turtle1/pose
-/turtle2/cmd_vel
-/turtle2/color_sensor
-/turtle2/pose
-
-```
-
-**3. `ros2 topic echo /turtle1/pose**`
-
-* *Explicación de lo observado:* Muestra el flujo constante de datos espaciales (x, y, theta) y velocidades de la tortuga líder.
-
-```bash
-x: 5.544444561004639
-y: 5.544444561004639
-theta: 0.0
-linear_velocity: 0.0
-angular_velocity: 0.0
-
-```
+<p align="center">
+  <img src="media/Ros2topicechoturtle1pose.png.png"width="700">
+</p>
 
 4. `ros2 topic info /turtle1/cmd_vel**`
 
-* *Explicación de lo observado:* Confirma el tipo de mensaje y que existe un publicador asignado.
+<p align="center">
+  <img src="media/Ros2topicinfoturtle1cmdvel.png"width="700">
+</p>
 
-```bash
-Type: geometry_msgs/msg/Twist
-Publisher count: 1
-Subscription count: 1
+5. `ros2 service list**`
 
-```
+<p align="center">
+  <img src="media/ros2servicelist1.png"width="700">
+</p>
 
-**5. `ros2 service list**`
-
-* *Explicación de lo observado:* Enumera las funciones a las que podemos llamar, comprobando la existencia de set_pen, spawn y reset.
-
-```bash
-/clear
-/kill
-/reset
-/spawn
-/turtle1/set_pen
-/turtle2/set_pen
-
-```
+<p align="center">
+  <img src="media/ros2servicelist2.png"width="700">
+</p>
 
 **6. Visualización de la Arquitectura (rqt_graph)**
 
 <p align="center">
-  <img src="media\captura1.png" width="500">
-</p>
+  <img src="media/rqtscreenshot.png"width="700">
+</p> 
 
 
-* *Explicación de las conexiones:* Muestra visualmente la topología de la red de ROS, donde nuestro nodo lee las poses y escribe comandos Twist en ambas tortugas.
+Muestra visualmente la topología de la red de ROS, donde nuestro nodo lee las poses y escribe comandos Twist en ambas tortugas.
 
 ---
-
+ 
 ## Código Fuente
 
-```python
-# aca va el codigo xdxdxd
-
-```
+**Código** [`aquí`](./move_turtle.py)
 
 ---
 
@@ -259,9 +239,7 @@ El análisis del código fuente, los criterios de diseño técnico seleccionados
 
 ## Conclusiones
 
-* **Conclusión 1:** El desarrollo de este laboratorio bajo ROS 2 Jazzy Jalisco permitió asimilar de forma práctica los conceptos de Middleware y la programación orientada a eventos mediante callbacks empleando rclpy.
-* **Conclusión 2:** Diseñar esquemas de control cinemático síncronos (como el sistema líder-seguidor) recalca la importancia de estructurar arquitecturas de software eficientes y de carácter no bloqueante para garantizar la estabilidad de sistemas robóticos en tiempo real.
+* El desarrollo de este laboratorio bajo ROS 2 Jazzy Jalisco permitió asimilar de forma práctica los conceptos de Middleware y la programación orientada a eventos mediante callbacks empleando rclpy.
+* Diseñar esquemas de control cinemático síncronos (como el sistema líder-seguidor) recalca la importancia de estructurar arquitecturas de software eficientes y de carácter no bloqueante para garantizar la estabilidad de sistemas robóticos en tiempo real.
 
-```
 
-```
