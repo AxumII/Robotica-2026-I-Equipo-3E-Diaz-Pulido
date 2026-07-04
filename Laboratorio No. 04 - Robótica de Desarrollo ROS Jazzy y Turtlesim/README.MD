@@ -60,38 +60,66 @@ A continuación se presenta la lógica de funcionamiento del programa, abarcando
 
 ```mermaid
 graph TD
-    A([Inicio de Nodos]) --> B[Inicializar rclpy: turtle_controller y turtle_follower]
-    B --> C[/Hilo de Lectura del Teclado/]
-    C --> D{Selección de Acción}
+    A([Inicio de Programa]) --> B[Inicializar rclpy]
+    B --> C[Instanciar TurtleController y TurtleFollower]
+    C --> D[Lanzar Hilo Secundario: keyboard_listener]
+    C --> E[Lanzar MultiThreadedExecutor: spin]
+
+    %% HILO DE TECLADO
+    subgraph "Hilo del Teclado (keyboard_listener)"
+        D --> F[Configurar Terminal en Modo Raw]
+        F --> G[/Lectura de Tecla no Bloqueante/]
+        G --> H{¿Qué tecla se presionó?}
+        
+        %% Control Manual
+        H -- Flechas Direccionales --> I[Publicar Twist manual en /turtle1/cmd_vel]
+        
+        %% Trayectorias y Modos
+        H -- S / T / L / F / J / D --> J[Cargar Trayectoria Waypoints y fijar CLOSED_LOOP]
+        H -- A --> K[Fijar Modo AVOIDANCE]
+        H -- P --> L[Llamar asíncronamente a /turtle1/set_pen]
+        H -- R --> M[Llamar asíncronamente a /clear y TeleportAbsolute]
+        H -- Q --> N[Limpiar Waypoints y Publicar Twist en cero]
+        
+        I --> G
+        J --> G
+        K --> G
+        L --> G
+        M --> G
+        N --> G
+    end
+
+    %% BUCLES DE CONTROL CONCURRENTES
+    subgraph "Ejecutor Multihilo (Bucle Principal)"
+        E --> O[Bucle de Control turtle1: control_loop a 100 Hz]
+        E --> P[Bucle de Seguimiento turtle2: follow_loop a 50 Hz]
+        
+        O --> Q{¿Modo de turtle1?}
+        Q -- CLOSED_LOOP --> R[Control Proporcional hacia Waypoint actual]
+        Q -- AVOIDANCE --> S[Caminata Aleatoria + Evasión de Muros]
+        Q -- MANUAL --> T[Esperar comandos de velocidad]
+        
+        R --> O
+        S --> O
+        T --> O
+        
+        P --> U[Calcular error de Distancia y Ángulo respecto a turtle1]
+        U --> V[Publicar Ley de Control Proporcional en /turtle2/cmd_vel]
+        V --> P
+    end
+
+    %% CIERRE Y DETENCIÓN SEGURA
+    G -- Ctrl+C o Interrupción --> W([Captura de KeyboardInterrupt])
+    O -- Ctrl+C o Interrupción --> W
+    P -- Ctrl+C o Interrupción --> W
     
-    %% Control Manual
-    D -- Flechas ↑ ↓ ← → --> E[Control Manual de Velocidad]
-    E --> I[Publicar en /turtle1/cmd_vel]
-    
-    %% Trayectorias Automáticas
-    D -- Teclas S / T --> F[Trayectoria Geométrica: Cuadrado / Triángulo]
-    F --> I
-    
-    %% Dibujo de Letras
-    D -- Teclas J / D / L / F  --> G[Dibujo de Letras Personalizadas]
-    G --> I
-    
-    %% Acciones Complementarias
-    D -- Teclas P / R / A --> H[Servicios y Modos: Lápiz / Reset / Avoidance]
-    H --> J[Llamar Servicio Turtlesim / Ajustar Lógica]
-    
-    %% Sistema Líder-Seguidor
-    A --> K[Suscribirse a /turtle1/pose y /turtle2/pose]
-    K --> L[Calcular Distancia y Orientación Relativa]
-    L --> M[Calcular Comandos Proporcionales]
-    M --> N[Publicar en /turtle2/cmd_vel]
-    
-    %% Detención y Cierre
-    D -- Tecla Q --> O[Detener Movimiento Completamente]
-    O --> I
-    D -- Ctrl+C --> P([Restaurar Terminal y Finalización Segura])
-    J --> C
-    I --> C
+    W --> X[Restaurar configuración de terminal tcsetattr]
+    X --> Y[Destruir Nodos y Apagar rclpy]
+    Y --> Z([Fin del Programa])
+
+    %% Estilos para destacar Inicio y Fin
+    classDef inicioFin fill:#1A659E,color:#FFF,stroke:#023E8A,stroke-width:2px;
+    class A,Z inicioFin;
 
 ```
 
