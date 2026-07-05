@@ -71,11 +71,11 @@ Se ubicó el robot en una posición segura, se verificó la conexión de los ser
 
 | Articulación | ID Dynamixel | Referencia | Sentido positivo | Función |
 | --- | --- | --- | --- | --- |
-| **Base** |  |  |  |  |
-| **Hombro** |  |  |  |  |
-| **Codo** |  |  |  |  |
-| **Muñeca** |  |  |  |  |
-| **Pinza** |  |  |  |  |
+| **Base** |001|AX-12A|Antihorario|Permitir la rotación del eje Z|
+| **Hombro** |002|AX-12A| Antihorario |Permitir la rotación del eje Y|
+| **Codo** | 003 |AX-12A| Antihorario |Permitir la rotación del eje Y|
+| **Muñeca** | 004 |AX-12A| Antihorario |Permitir la rotación del eje Y|
+| **Pinza** | 005 |AX-12A| Antihorario |Transformar la rotación en translación, para que por medio de fricción, se puedan sostener objetos en el eje Z|
 
 ---
 
@@ -114,11 +114,11 @@ Para las cinco posiciones de prueba por articulación, se calculó el $e = q_{de
 
 | Articulación | Límite inferior | Límite superior | Margen de seguridad |
 | --- | --- | --- | --- |
-| **Base** |  |  |  |
-| **Hombro** |  |  |  |
-| **Codo** |  |  |  |
-| **Muñeca** |  |  |  |
-| **Pinza** |  |  |  |
+| **Base** | -150 | 150 | 300 |
+| **Hombro** | -20 | 10 | 30 |
+| **Codo** | -95 | 95 | 190 |
+| **Muñeca** | -95 | 95 | 190 |
+| **Pinza** | -85 | 55 | 140 |
 
 *Nota: Se implementó un bloqueo por software en Python para impedir el envío de comandos fuera de estos rangos.*
 
