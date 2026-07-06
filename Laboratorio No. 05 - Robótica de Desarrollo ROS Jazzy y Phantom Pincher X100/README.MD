@@ -172,10 +172,10 @@ Se evaluó la función $q(t) = q_0 + A \sin(2\pi ft)$ realizando 4 pruebas (vari
 
 | $i$ | $\theta_i$ | $d_i$ | $a_i$ | $\alpha_i$ |
 | --- | --- | --- | --- | --- |
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
+| 1 | $q_1$ | 0 | 153 | 90 |
+| 2 | $q_2$ | 0 | 106 | 0 |
+| 3 | $q_3$ | 0 | 106 | 0 |
+| 4 | $q_4$ | 0 | 96 | 0 |
 
 *(Presentar las ecuaciones de las transformaciones homogéneas implementadas en Python para hallar `x, y, z, roll, pitch, yaw` y la comparación matemática contra las lecturas visuales de RViz para las 5 configuraciones de la Actividad 7).*
 
