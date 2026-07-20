@@ -197,6 +197,8 @@ Se realizaron las mediciones geométricas directas sobre la estructura física d
 * **Eslabón 3 (Antebrazo - $L_3$):** Longitud efectiva de **106 mm** entre centros de pivote.
 * **Eslabón 4 (Efector Final / TCP - $L_4$):** Longitud de **96 mm** desde el eje de articulación de la muñeca hasta el extremo operativo de las ganchos de la pinza.
 
+![D1](media/Diagrama1.jpeg)
+![D2](media/Diagrama2.jpeg)
 
 ---
 
@@ -640,9 +642,19 @@ Se registraron las lecturas reales de telemetría de los encoders durante el des
 
 ### Validación y Detección de Colisiones en el Espacio de Configuración (C-Space)
 
-Antes de enviar cualquier trayectoria al robot físico, el módulo `Tracer` evalúa paso a paso cada paso interpolado ($q(t)$) contra las regiones prohibidas mapeadas en la memoria (obstáculos geométricos y límites mecánicos)[cite: 5]. 
+Antes de enviar cualquier trayectoria al robot físico, el módulo `Tracer` evalúa paso a paso cada paso interpolado ($q(t) = [\theta_1, \theta_2, \theta_3, \theta_4]^T$) contra las regiones prohibidas mapeadas en la memoria (obstáculos geométricos y límites mecánicos) mediante un algoritmo de filtrado determinista previo a la inyección de consignas en la red de los servomotores:
 
-Si la trayectoria calculada atraviesa un obstáculo o satura un límite, el algoritmo aborta la ejecución en el hardware, imprime una alerta detallada indicando **qué parte del robot colisionó, con qué objeto y en qué punto cartesiano del TCP**, y propone una ruta alternativa o detiene la secuencia[cite: 5].
+1. **Discretización y Mapeo en C-Space (Filtro Articular):**
+   A través del método `Limits.analyze_obstacle()`, los volúmenes geométricos del entorno (cajas orientadas y cilindros) se transforman en conjuntos discretos de micro-intervalos prohibidos en el dominio articular $\mathcal{C}_{\text{obstaculo}} \subset \mathbb{R}^4$. Durante la evaluación de cada paso discreto, el sistema verifica si el vector de estado pertenece a una región prohibida indexada en memoria caché, descartando configuraciones no alcanzables por interceptación del efector final (TCP).
+
+2. **Muestreo Lineal Geométrico de Eslabones en Tiempo Real (Filtro Cartesiano):**
+   Para solucionar situaciones donde el TCP se halla libre pero las estructuras intermedias colisionan, el método `_esta_colisionando()` ejecuta un análisis espectral a lo largo de los tubos cinemáticos. Se muestrea la línea de segmento entre pares de articulaciones contiguas $P_i P_{i+1}$ a intervalos longitudinales $\Delta s = 20\text{ mm}$. Cada nodo espacial $P(t) = P_A + t(P_B - P_A)$ se transforma mediante matrices de rotación $R_{3\times3}$ al sistema de referencia local del obstáculo para evaluar su pertenencia volumétrica.
+
+3. **Diagnóstico Telemétrico y Aborto Preventivo:**
+   Si la trayectoria calculada atraviesa un obstáculo o satura un límite mecánico preestablecido ($-150^\circ \le \theta_1 \le 150^\circ$, $-95^\circ \le \theta_{2,3,4} \le 95^\circ$), el hilo de ejecución aborta la transmisión en el hardware de inmediato e imprime una traza de diagnóstico en la terminal de control detallando:
+   * **Parte del robot comprometida:** Identificación del elemento en riesgo (p. ej., *TCP/Efector Final* vs. *Junta/Eslabón 2*).
+   * **Objeto intersecado:** Identificador del obstáculo causal (p. ej., *Cilindro_1*, *Caja_Base*).
+   * **Punto cartesiano del TCP:** Coordenadas tridimensionales exactas $(X, Y, Z)$ en mm del instante exacto de impacto.
 
 #### Evidencias de la Consola de Validación:
 
