@@ -148,6 +148,8 @@ graph TD
 
 ### Plano de Planta y Disposición del Trabajo
 
+![Plano robot](media/px100_drawing.png)
+
 Para la visualización detallada de la celda de trabajo, acotado de componentes y la disposición espacial del manipulador robótico dentro del entorno de laboratorio, se generó el plano técnico correspondiente en formato ISO.
 
 El plano completo de la celda y el ensamblado de la planta se puede consultar e inspeccionar en el siguiente enlace:
